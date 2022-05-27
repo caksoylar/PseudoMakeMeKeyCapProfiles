@@ -214,13 +214,6 @@ function StemTranslation(t, keyID) =
     stemCrossHeight+.1 + (t/stemLayers*(KeyHeight(keyID)- topthickness - stemCrossHeight-.1))    // Z shift
   ];
 
-function StemRotation(t, keyID) =
-  [
-    ((1-t)/stemLayers*XAngleSkew(keyID)),   // X shift
-    ((1-t)/stemLayers*YAngleSkew(keyID)),   // Y shift
-    ((1-t)/stemLayers*ZAngleSkew(keyID))    // Z shift
-  ];
-
 function StemTransform(t, keyID) =
   [
     pow(t/stemLayers, StemExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/stemLayers, StemExponent(keyID)))*(stemWid - 2*slop),
@@ -259,7 +252,7 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
       if(Stem == true){
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
-          translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID))*rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // outer shell
+          translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // outer shell
         }
       }
     }

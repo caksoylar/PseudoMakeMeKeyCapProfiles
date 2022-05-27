@@ -234,13 +234,6 @@ function StemTranslation(t, keyID) =
     stemCrossHeight+.1 + (t/stemLayers*(KeyHeight(keyID)- topthickness - stemCrossHeight-.1))    // Z shift
   ];
 
-function StemRotation(t, keyID) =
-  [
-    ((1-t)/stemLayers*XAngleSkew(keyID)),   // X shift
-    ((1-t)/stemLayers*YAngleSkew(keyID)),   // Y shift
-    ((1-t)/stemLayers*ZAngleSkew(keyID))    // Z shift
-  ];
-
 function StemTransform(t, keyID) =
   [
     pow(t/stemLayers, StemExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/stemLayers, StemExponent(keyID)))*(stemWid - 2*slop),
