@@ -287,10 +287,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
       if(Stem == true){
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
-          if (Stab != 0){
-            translate([Stab/2, 0, 0])rotate([0, 0, StemRot])cherry_stem(KeyHeight(keyID), slop);
-            translate([-Stab/2, 0, 0])rotate([0, 0, StemRot])cherry_stem(KeyHeight(keyID), slop);
-          }
           translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=1 /*StemRadius(i, keyID) */ ))]); // outer shell
        }
 
@@ -326,49 +322,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
 
 // ------------------stems
 $fn = fn;
-
-function outer_cherry_stem(slop) = [ stemWid - slop * 2, stemLen - slop * 2];
-function outer_cherry_stabilizer_stem(slop) = [4.85 - slop * 2, 6.05 - slop * 2];
-function outer_box_cherry_stem(slop) = [6 - slop, 6 - slop];
-
-// .005 purely for aesthetics, to get rid of that ugly crosshatch
-function cherry_cross(slop, extra_vertical = 0) = [
-  // horizontal tine
-  [4.03 + slop, 1.15 + slop / 3],
-  // vertical tine
-  [1.25 + slop / 3, 4.23 + extra_vertical + slop / 3 + .005],
-];
-module inside_cherry_cross(slop) {
-  // inside cross
-  // translation purely for aesthetic purposes, to get rid of that awful lattice
-  translate([0, 0, -0.005]) {
-    linear_extrude(height = stemCrossHeight) {
-      square(cherry_cross(slop, extra_vertical)[0], center=true);
-      square(cherry_cross(slop, extra_vertical)[1], center=true);
-    }
-  }
-
-  // Guides to assist insertion and mitigate first layer squishing
-  {
-    for (i = cherry_cross(slop, extra_vertical)) hull() {
-      linear_extrude(height = 0.01, center = false) offset(delta = 0.4) square(i, center=true);
-      translate([0, 0, 0.5]) linear_extrude(height = 0.01, center = false)  square(i, center=true);
-    }
-  }
-}
-
-module cherry_stem(depth, slop) {
-  difference(){
-    // outside shape
-    linear_extrude(height = depth) {
-      offset(r=1){
-        square(outer_cherry_stem(slop) - [2, 2], center=true);
-      }
-    }
-    inside_cherry_cross(slop);
-  }
-}
-
 
 module choc_stem(draftAng = 5) {
   stemHeight = 3.1;
