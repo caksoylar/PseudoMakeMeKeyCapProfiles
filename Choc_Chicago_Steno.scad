@@ -14,7 +14,6 @@ keycap(
   Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
-  visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
   Legends = false
@@ -233,7 +232,7 @@ function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3)
 
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -276,10 +275,8 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     }
     // Dish Shape
     if(Dish == true){
-      if(visualizeDish == false){
-        translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-        translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
-     }
+      translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
+      translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
     }
     if(crossSection == true) {
       translate([0, -25, -.1])cube([15, 50, 15]);

@@ -15,7 +15,6 @@ mirror([1, 0, 0])keycap(
   Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
-  visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
   Legends = false
@@ -256,7 +255,7 @@ function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*BackTanInit(
 function TanTransition(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*TransitionAngleInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*TransitionAngleFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
@@ -287,10 +286,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
           choc_stem(draftAng = draftAngle);
           translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=1 /*StemRadius(i, keyID) */ ))]); // outer shell
         }
-      }
-      if(visualizeDish == true && Dish == true){
-        #translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-        #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
       }
     }
 
