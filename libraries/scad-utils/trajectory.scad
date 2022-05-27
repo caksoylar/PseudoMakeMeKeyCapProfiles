@@ -4,7 +4,7 @@ function val(a=undef,default=undef) = a == undef ? default : a;
 function vec_is_undef(x,index_=0) = index_ >= len(x) ? true :
 is_undef(x[index_]) && vec_is_undef(x,index_+1);
 
-function is_undef(x) = len(x) > 0 ? vec_is_undef(x) : x == undef;
+//function is_undef(x) = len(x) > 0 ? vec_is_undef(x) : x == undef;
 // Either a or b, but not both
 function either(a,b,default=undef) = is_undef(a) ? (is_undef(b) ? default : b) : is_undef(b) ? a : undef;
 
