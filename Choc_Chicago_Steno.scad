@@ -14,7 +14,6 @@ keycap(
   Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
-  Stab    = 0,
   visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
@@ -235,7 +234,7 @@ function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3)
 
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Stab = 0, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -262,9 +261,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
       if(Stem == true){
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
-          if (Stab != 0){
-            // no need for stab
-          }
           translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID))*rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // outer shell
         }
       }
@@ -371,21 +367,3 @@ function sign_y(i, n) =
 	i > 0 && i < n/2  ?  1 :
 	i > n/2 ? -1 :
 	0;
-
-/*lp_production_base();
-for(i = [0:3-1]){
-        for(j = [0:2-1]){
-            translate([(1-i)*21, (.5-j)*21, 0]){
-            keycap(keyID = 1, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false , Stab = 0 , visualizeDish =false , crossSection = false, homeDot = true, Legends = false);
-//              import("R3X.stl");
-          }
-        }
-      }
-for(i = [0:1-1]){
-        for(j = [0:2-1]){
-            translate([(1-i)*21, (.5-j)*21, 0]){
-            keycap(keyID = 1, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false , Stab = 0 , visualizeDish =false , crossSection = false, homeDot = true, Legends = false);
-          }
-        }
-      }
-translate([(1-0)*21, (.5-0)*21, 0])*/

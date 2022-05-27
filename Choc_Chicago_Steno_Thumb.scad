@@ -15,7 +15,6 @@ mirror([1, 0, 0])keycap(
   Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
-  Stab    = 0,
   visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
@@ -258,7 +257,7 @@ function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*BackTanInit(
 function TanTransition(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*TransitionAngleInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*TransitionAngleFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, SecondaryDish = false, Stem = false, StemRot = 0, homeDot = false, Stab = 0, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
@@ -391,44 +390,3 @@ function sign_y(i, n) =
 	i > 0 && i < n/2  ?  1 :
 	i > n/2 ? -1 :
 	0;
-
-/*Tester */
-/*translate([0, 0, 0])lp_master_base(xu = 2, yu = 1 );
- lp_production_base();
-      for(i = [0:2]){
-        for(j = [0:1]){
-          translate([(1-i)*21, (.5-j)*21, 0]){
-            translate([0, 0, -.05])rotate([0, 0, 0])mirror([0, j, 0])keycap(keyID = 2, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-          }
-        }
-      }
-
-   lp_production_base15();
-      for(i = [0:1]){
-        for(j = [0:1]){
-            translate([(.75-i*1.5)*21, (.5-j)*21, 0]){
-            translate([0, 0, -.05])rotate([0, 0, 90])mirror([j, 0, 0])keycap(keyID = 3, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-          }
-        }
-      }
-
-translate([-19, 3.5, -.05])rotate([0, 0, 10])mirror([0, 0, 0])keycap(keyID = 3, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-translate([0, -17, 0])rotate([0, 0, 0])mirror([0, 0, 0])keycap(keyID = 0, cutLen = 0, Stem =false,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-
-translate([0, 34, 0])rotate([0, 0, 0])mirror([0, 1, 0])keycap(keyID = 7, cutLen = 0, Stem =true,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-translate([0, -17, 0])rotate([0, 0, 0])mirror([0, 0, 0])keycap(keyID = 0, cutLen = 0, Stem =true,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-
-
-translate([-3, 0, 0])rotate([0, 0, 0])mirror([0, 0, 0])keycap(keyID = 2, cutLen = 7, Stem =true,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-translate([3, 0, 0])rotate([0, 0, 0])mirror([0, 0, 0])keycap(keyID =  3, cutLen = -7, Stem =true,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-translate([0, 18, 0])rotate([0, 0, 0])mirror([0, 0, 0])keycap(keyID =  4, cutLen = 0, Stem =true,  Dish = true, SecondaryDish = false, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-
-  translate([0, -17.5, 0])rotate([0, 0, 0])mirror([0, 1, 0])keycap(keyID = 1, cutLen = -ChocCut, Stem =true,  Dish = true, SecondaryDish = true, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-
-  translate([18, -17.5, 0])rotate([0, 0, 180])mirror([0, 0, 0])keycap(keyID = 1, cutLen = -ChocCut, Stem =true,  Dish = true, SecondaryDish = true, Stab = 0, visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-  translate([18, 0, 0])rotate([0, 0, 180])mirror([0, 1, 0])keycap(keyID = 1, cutLen = -ChocCut, Stem =true,  Dish = true, SecondaryDish = true, Stab = 0, visualizeDish = false, crossSection = false, homeDot = true, Legends = false);
-
-
-#translate([0, 17, 0])cube([14.5, 13.5, 4], center = true); // internal check
-#translate([0, 0, 5])cube([19.05, 19.05, 10], center = true); // internal check
-#translate([0, 0, 0])cube([17.5, 16.5, 10], center = true); // internal check*/
