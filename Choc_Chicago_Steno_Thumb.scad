@@ -96,26 +96,6 @@ dishParameters = // dishParameter[keyID][ParameterID]
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
 ];
 
-SecondaryDishParam =
-[
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,   20,     2], // Chicago Steno R2/R4
-  [   6,  3.5,    7,  -50,      3,  2.5,    8,    20,     3,          2,  4.2,    8,     0,    8,    8,     3], // Chicago Steno R3 flat
-  [   6,  3.5,    7,  -50,      3,  2.5,    8,    20,     3,          2,  4.2,    8,     0,    8,    8,     3], // Chicago Steno R3 chord
-
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Levee Steno R2/R4
-  [   6,  3.5,    7,  -50,      5,  1.0,   16,    23,     2,          6,  3.5,    7,   -50,   16,    23,     2], // Levee Steno R2/R4
-  // 1.25
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Chicago Steno R2/R4
-  [   6,  3.5,    7,  -50,      3,  2.5,    8,    20,     3,          2,  4.2,    8,     0,    8,     8,     3], // Chicago Steno R3 flat
-  // 1.50
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Chicago Steno R2/R4
-  [   6,  3.5,    7,  -50,      3,  2.5,    8,    20,     3,          2,  4.2,    8,     0,    8,     8,     3], // Chicago Steno R3 flat
-
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Chicago Steno R1
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Chicago Steno R1
-  [   6,  3.5,    7,  -50,      3,    2,    8,     8,     2,          5,    5,    5,    15,   10,    20,     2], // Chicago Steno R1
-];
-
 function BottomWidth(keyID)  = keyParameters[keyID][0];
 function BottomLength(keyID) = keyParameters[keyID][1];
 function TopWidthDiff(keyID) = keyParameters[keyID][2];
@@ -159,24 +139,6 @@ function TanArcExpo(keyID)    = dishParameters[keyID][20];
 function TransitionAngleInit(keyID) = dishParameters[keyID][21];
 function TransitionAngleFin(keyID)  = dishParameters[keyID][22];
 
-function SFrontForward1(keyID) = SecondaryDishParam[keyID][0];
-function SFrontForward2(keyID) = SecondaryDishParam[keyID][1];
-function SFrontPitch1(keyID)   = SecondaryDishParam[keyID][2];
-function SFrontPitch2(keyID)   = SecondaryDishParam[keyID][3];
-function SDishDepth(keyID)     = SecondaryDishParam[keyID][4];
-function SDishHeightDif(keyID) = SecondaryDishParam[keyID][5];
-function SFrontInitArc(keyID)  = SecondaryDishParam[keyID][6];
-function SFrontFinArc(keyID)   = SecondaryDishParam[keyID][7];
-function SFrontArcExpo(keyID)  = SecondaryDishParam[keyID][8];
-function SBackForward1(keyID)  = SecondaryDishParam[keyID][9];
-function SBackForward2(keyID)  = SecondaryDishParam[keyID][10];
-function SBackPitch1(keyID)    = SecondaryDishParam[keyID][11];
-function SBackPitch2(keyID)    = SecondaryDishParam[keyID][12];
-function SBackInitArc(keyID)   = SecondaryDishParam[keyID][13];
-function SBackFinArc(keyID)    = SecondaryDishParam[keyID][14];
-function SBackArcExpo(keyID)   = SecondaryDishParam[keyID][15];
-
-
 function FrontTrajectory(keyID) =
   [
     trajectory(forward = FrontForward1(keyID), pitch =  FrontPitch1(keyID)), // more param available: yaw, roll, scale
@@ -189,19 +151,6 @@ function BackTrajectory (keyID) =
     trajectory(backward = BackForward2(keyID), pitch = -BackPitch2(keyID)),
   ];
 
-function SFrontTrajectory(keyID) =
-  [
-    trajectory(forward = SFrontForward1(keyID), pitch =  SFrontPitch1(keyID)), // more param available: yaw, roll, scale
-    trajectory(forward = SFrontForward2(keyID), pitch =  SFrontPitch2(keyID)), // You can add more traj if you wish
-  ];
-
-function SBackTrajectory (keyID) =
-  [
-    trajectory(forward = SBackForward1(keyID), pitch =  SBackPitch1(keyID)),
-    trajectory(forward = SBackForward2(keyID), pitch =  SBackPitch2(keyID)),
-    trajectory(forward = 4, pitch =  -15),
-    trajectory(forward = 6, pitch =  -5),
-  ];
 // ------- function defining Dish Shapes
 
 function ellipse(a, b, d = 0, rot1 = 0, rot2 = 360) = [for (t = [rot1:step:rot2]) [a*cos(t)+a, b*sin(t)*(1+d*cos(t))]]; // Centered at a apex to avoid inverted face
@@ -324,16 +273,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
 //  for(i=[0:len(FrontPath)-1])echo ( len(transform(FrontPath[i], DishShape2( a= DishDepth(keyID), b= FrontDishArc(i), phi = TransitionAngleInit(keyID), theta= 60
 //   , r = FTanRadius(i, keyID)))), TanTransition(i, keyID));
 
-  // Secondary Dish
-  SFrontPath = quantize_trajectories(SFrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
-  SBackPath  = quantize_trajectories(SBackTrajectory(keyID),  steps = stepsize, loop=false, start_position= $t*4);
-
-  function SFrontDishArc(t) =  pow((t)/(len(SFrontPath)), SFrontArcExpo(keyID))*SFrontFinArc(keyID) + (1-pow(t/(len(SFrontPath)), SFrontArcExpo(keyID)))*SFrontInitArc(keyID);
-  function SBackDishArc(t)  =  pow((t)/(len(SBackPath)), SBackArcExpo(keyID))*SBackFinArc(keyID) + (1-pow(t/(len(SFrontPath)), SBackArcExpo(keyID)))*SBackInitArc(keyID);
-
-  SFrontCurve = [ for(i=[0:len(SFrontPath)-1]) transform(SFrontPath[i], DishShape(SDishDepth(keyID), SFrontDishArc(i), 1, d = 0)) ];
-  SBackCurve  = [ for(i=[0:len(SBackPath)-1])  transform(SBackPath[i],  DishShape(SDishDepth(keyID),  SBackDishArc(i), 1, d = 0)) ];
-
   // builds
   difference(){
     union(){
@@ -376,16 +315,10 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     if(Dish == true){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
-
-
-     if(SecondaryDish == true){
-       #translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(SBackCurve);
-       mirror([1, 0, 0])translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(SBackCurve);
-     }
-   }
-     if(crossSection == true) {
-       translate([0, -25, -.1])cube([15, 50, 15]);
-     }
+    }
+    if(crossSection == true) {
+      translate([0, -25, -.1])cube([15, 50, 15]);
+    }
   }
   // Homing dot
   if(homeDot == true)translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1);
