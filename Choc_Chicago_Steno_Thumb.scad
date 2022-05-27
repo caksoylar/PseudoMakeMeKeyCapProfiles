@@ -1,4 +1,4 @@
-use <scad-utils/morphology.scad> // for cheaper minwoski
+use <scad-utils/morphology.scad> // for cheaper minkowski
 use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
@@ -6,7 +6,7 @@ use <scad-utils/trajectory_path.scad>
 use <sweep.scad>
 use <skin.scad>
 
-// Choc Chord version Chicago Stenographer with sculpted Thumb cluter
+// Choc Chord version Chicago Stenographer with sculpted Thumb cluster
 // change stemrot
 
 mirror([1, 0, 0])keycap(
@@ -26,7 +26,7 @@ mirror([1, 0, 0])keycap(
 wallthickness = 1.1; // 1.75 for mx size, 1.1
 topthickness = 2.5;  // 2 for phat 3 for chicago
 stepsize = 40;       // resolution of Trajectory
-step =2;             // resolution of ellipses
+step = 2;            // resolution of ellipses
 fn = 32;             // resolution of Rounded Rectangles: 60 for output
 layers = 40;         // resolution of vertical Sweep: 50 for output
 
@@ -45,7 +45,7 @@ draftAngle = 0; // degree  note:Stem Only
 
 keyParameters = // keyParameters[KeyID][ParameterID]
 [
-//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft  XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
     // Column 0
     // Levee: Chicago in choc Dimension for ref
     [17.20,  16.00,   5.6, 	   5,  5.0,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], // Levee Steno R2/R4
@@ -185,14 +185,14 @@ function FrontTrajectory(keyID) =
 
 function BackTrajectory (keyID) =
   [
-    trajectory(backward = BackForward1(keyID), pitch =  -BackPitch1(keyID)),
-    trajectory(backward = BackForward2(keyID), pitch =  -BackPitch2(keyID)),
+    trajectory(backward = BackForward1(keyID), pitch = -BackPitch1(keyID)),
+    trajectory(backward = BackForward2(keyID), pitch = -BackPitch2(keyID)),
   ];
 
 function SFrontTrajectory(keyID) =
   [
     trajectory(forward = SFrontForward1(keyID), pitch =  SFrontPitch1(keyID)), // more param available: yaw, roll, scale
-    trajectory(forward = SFrontForward2(keyID), pitch =  SFrontPitch2(keyID)),  // You can add more traj if you wish
+    trajectory(forward = SFrontForward2(keyID), pitch =  SFrontPitch2(keyID)), // You can add more traj if you wish
   ];
 
 function SBackTrajectory (keyID) =
@@ -213,18 +213,15 @@ function DishShape (a, b, c, d) =
 //   [[c+a, -b]]
   );
 
-
-
 function DishShape2 (a, b, phi = 200, theta, r) =
   concat(
 //   [[c+a, b]],
     ellipse(a, b, d = 0, rot1 = 90, rot2 = phi),
-
-[for (t = [step:step*2:theta])let( sig = atan(a*cos(phi)/-b*sin(phi)))
-     [ r*cos(-atan(-a*cos(phi)/b*sin(phi))-t)
-      +a*cos(phi)
-      -r*cos(sig)
-      +a,
+    [for (t = [step:step*2:theta])let(sig = atan(a*cos(phi)/-b*sin(phi)))
+      [ r*cos(-atan(-a*cos(phi)/b*sin(phi))-t)
+       +a*cos(phi)
+       -r*cos(sig)
+       +a,
 
        r*sin(-atan(-a*cos(phi)/b*sin(phi))-t)
       +b*sin(phi)
@@ -232,9 +229,8 @@ function DishShape2 (a, b, phi = 200, theta, r) =
     ],
 
 
-    [[a, b*sin(phi)-r*sin(theta)*2]] // bounday vertex to clear ends
+    [[a, b*sin(phi)-r*sin(theta)*2]] // boundary vertex to clear ends
   );
-
 
 function oval_path(theta, phi, a, b, c, deform = 0) = [
  a*cos(theta)*cos(phi), // x
@@ -243,7 +239,6 @@ function oval_path(theta, phi, a, b, c, deform = 0) = [
 ];
 
 path_trans2 = [for (t=[0:step:180])   translation(oval_path(t, 0, 10, 15, 2, 0))*rotation([0, 90, 0])];
-
 
 // --------------Function definng Cap
 function CapTranslation(t, keyID) =
@@ -309,14 +304,9 @@ function StemTransform(t, keyID) =
 function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3))*1;
   // Stem Exponent
 
-//
-
 function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*ForwardTanInit(keyID) + (1-pow(t/stepsize, TanArcExpo(keyID) ))*ForwardTanFin(keyID);
-
 function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*BackTanInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*BackTanFin(keyID);
-
 function TanTransition(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*TransitionAngleInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*TransitionAngleFin(keyID);
-
 
 // /----- KEY Builder Module
 module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, SecondaryDish = false, Stem = false, StemRot = 0, homeDot = false, Stab = 0, Legends = false) {
@@ -328,10 +318,9 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
   // Scaling initial and final dim tranformation by exponents
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
   function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
-  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape2( a= DishDepth(keyID), b= FrontDishArc(i), phi = TransitionAngleInit(keyID), theta= 60
-   , r = FTanRadius(i, keyID))) ];
-  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape2(DishDepth(keyID), BackDishArc(i), phi = TransitionAngleInit(keyID), theta= 60
-   , r = BTanRadius(i, keyID))) ];
+
+  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape2(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))) ];
+  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape2(DishDepth(keyID), BackDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))) ];
 //  for(i=[0:len(FrontPath)-1])echo ( len(transform(FrontPath[i], DishShape2( a= DishDepth(keyID), b= FrontDishArc(i), phi = TransitionAngleInit(keyID), theta= 60
 //   , r = FTanRadius(i, keyID)))), TanTransition(i, keyID));
 
@@ -375,7 +364,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     }
 
     // Cuts
-
     // Fonts
     if(cutLen != 0){
       translate([sign(cutLen)*(BottomLength(keyID)+CapRound0i(keyID)+abs(cutLen))/2, 0, 0])
@@ -383,7 +371,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     }
     if(Legends ==  true){
       #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      //  #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([0, -3.5, 0])linear_extrude(height = 0.5)text( text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
       }
    // Dish Shape
     if(Dish == true){
@@ -394,11 +381,6 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
      if(SecondaryDish == true){
        #translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(SBackCurve);
        mirror([1, 0, 0])translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(SBackCurve);
-//       translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(SFrontCurve);
-//
-//       rotate([0, 0, 180])translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(SBackCurve);
-
-//       rotate([0, 0, 180])translate([BottomWidth(keyID)/2, -BottomLength(keyID)/2, KeyHeight(keyID)-SDishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(SFrontCurve);
      }
    }
      if(crossSection == true) {
@@ -523,17 +505,6 @@ function sign_y(i, n) =
 	i > 0 && i < n/2  ?  1 :
 	i > n/2 ? -1 :
 	0;
-lp_key = [
-//     "base_sx", 18.5,
-//     "base_sy", 18.5,
-     "base_sx", 17.65,
-     "base_sy", 16.5,
-     "cavity_sx", 16.1,
-     "cavity_sy", 14.9,
-     "cavity_sz", 1.6,
-     "cavity_ch_xy", 1.6,
-     "indent_inset", 1.5
-     ];
 
 /*Tester */
 /*translate([0, 0, 0])lp_master_base(xu = 2, yu = 1 );

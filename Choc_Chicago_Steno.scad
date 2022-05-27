@@ -8,19 +8,18 @@ use <skin.scad>
 
 // Choc Chord version Chicago Stenographer
 
-/* Tester */
 keycap(
-  keyID  = 1,            // change profile refer to KeyParameters Struct
-  cutLen = 0,            // Don't change. for chopped caps
-  Stem   = true,         // turn on shell and stems
+  keyID   = 1,           // change profile refer to KeyParameters Struct
+  cutLen  = 0,           // Don't change. for chopped caps
+  Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
-  Dish   = true,         // turn on dish cut
-  Stab   = 0,
+  Dish    = true,        // turn on dish cut
+  Stab    = 0,
   visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
   Legends = false
-  );
+);
 
 // -Parameters
 wallthickness = 1.1; // 1.75 for mx size, 1.1
@@ -32,7 +31,6 @@ layers = 40;         // resolution of vertical Sweep: 50 for output
 
 // ---Stem param
 slop    = 0.3;
-stemRot = 0;
 stemWid = 8;
 stemLen = 6;
 stemCrossHeight = 1.8;
@@ -43,7 +41,6 @@ stemLayers = 50; // resolution of stem to cap top transition
 // injection param
 draftAngle = 0; // degree  note:Stem Only
 // TODO: Add wall thickness transition?
-
 
 keyParameters = // keyParameters[KeyID][ParameterID]
 [
@@ -69,10 +66,10 @@ keyParameters = // keyParameters[KeyID][ParameterID]
     [35.70,  15.60,   5.6, 	   5,  4.5,    0,   .0,     5,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R2/R4 1.5
     [30.90,  15.60,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R3 1.5u
     // Ergo shits
-    [18.75,  18.75,   5.6, 	   5,    8,    0,   .25,     0,    -0,    -0,   2, 2.5,    .10,      3,    .10,      3,     2,       2], // highpro 19.05 R2|4
-    [17.20,  16.00,   5.6, 	   5,  4.7,    0,   .0,      3,    -0,    -0,   2, 2.5,    .10,      2,    .10,      3,     2,       2], // Chicago Steno R2 ALT
-    [17.20,  16.00,   5.6, 	   5,  5.5,    0,   .0,      7,    -0,    -0,   2, 2.5,    .10,      2,    .10,      3,     2,       2], // Chicago Steno R1 Steap
-    [17.20,  16.00,   5.6, 	   5,  7.0,    0,   .0,     10,    -0,    -0,   2, 2.5,    .10,      2,    .10,      3,     2,       2], // Chicago Steno R1 mild with alt R2
+    [18.75,  18.75,   5.6, 	   5,    8,    0,  .25,      0,    -0,    -0,  2, 2.5,    .10,      3,     .10,      3,     2,       2], // highpro 19.05 R2|4
+    [17.20,  16.00,   5.6, 	   5,  4.7,    0,   .0,      3,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R2 ALT
+    [17.20,  16.00,   5.6, 	   5,  5.5,    0,   .0,      7,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R1 Steap
+    [17.20,  16.00,   5.6, 	   5,  7.0,    0,   .0,     10,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R1 mild with alt R2
 ];
 
 dishParameters = // dishParameter[keyID][ParameterID]
@@ -101,7 +98,7 @@ dishParameters = // dishParameter[keyID][ParameterID]
   [   5,    5,    5,  -40,      7,    1.7,   11,    15,     2,        5,    5,    5,   -40,   11,    15,     2], // Chicago Steno R3 flat
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2] // Chicago Steno R1
+  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
 ];
 
 
@@ -150,7 +147,7 @@ function FrontTrajectory(keyID) =
 function BackTrajectory (keyID) =
   [
     trajectory(backward = BackForward1(keyID), pitch = -BackPitch1(keyID)),
-    trajectory(backward = BackForward2(keyID), pitch = -BackPitch2(keyID))
+    trajectory(backward = BackForward2(keyID), pitch = -BackPitch2(keyID)),
   ];
 
 // ------- function defining Dish Shapes
@@ -164,20 +161,9 @@ function DishShape (a, b, c, d) =
 //   [[c+a, -b]]
   );
 
-function DishShape2 (a, b, phi = 200, theta, r) =
-  concat(
-//   [[c+a, b]],
-    ellipse(a, b, d = 0, rot1 = 90, rot2 = phi),
-    [for (t = [-atan(-b*cos(phi)/a*sin(phi))+step:step:90])
-      [r*sin(t)+a*cos(phi)+r*sin(atan(b*cos(phi)/-a*sin(phi)))+a, r*cos(t)+b*sin(phi)-r*cos(atan(b*cos(phi)/-a*sin(phi)))]],
-
-
-    [[a, b*sin(270)+r*sin(theta)]] // boundary vertex to clear ends
-  );
-
 function oval_path(theta, phi, a, b, c, deform = 0) = [
  a*cos(theta)*cos(phi), // x
- c*sin(theta)*(1+deform*cos(theta)) , //
+ c*sin(theta)*(1+deform*cos(theta)), //
  b*sin(phi),
 ];
 
@@ -207,7 +193,7 @@ function CapRotation(t, keyID) =
 
 function CapTransform(t, keyID) =
   [
-    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID) ,
+    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID),
     pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)) + (1-pow(t/layers, LenExponent(keyID)))*BottomLength(keyID)
   ];
 function CapRoundness(t, keyID) =
@@ -340,6 +326,7 @@ module choc_stem(draftAng = 5) {
   translate([5.7/2, 0, -stemHeight/2+2])Stem();
   translate([-5.7/2, 0, -stemHeight/2+2])Stem();
 }
+
 // ----- helper functions
 function rounded_rectangle_profile(size=[1, 1], r=1, fn=32) = [
 	for (index = [0:fn-1])
@@ -353,8 +340,8 @@ function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
     for (index = [0:fn-1]) // section right
      let(theta1 = -atan(a[1]/b[1])+ 2*atan(a[1]/b[1])*index/fn)
       [b[1]*cos(theta1), a[1]*sin(theta1)]
-    + [a[0]*cos(atan(b[0]/a[0])) , 0]
-    - [b[1]*cos(atan(a[1]/b[1])) , 0],
+    + [a[0]*cos(atan(b[0]/a[0])), 0]
+    - [b[1]*cos(atan(a[1]/b[1])), 0],
 
     for(index = [0:fn-1]) // section Top
      let(theta2 = atan(b[0]/a[0]) + (180 -2*atan(b[0]/a[0]))*index/fn)
@@ -365,8 +352,8 @@ function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
     for(index = [0:fn-1]) // section left
      let(theta2 = -atan(a[1]/b[1])+180+ 2*atan(a[1]/b[1])*index/fn)
       [b[1]*cos(theta2), a[1]*sin(theta2)]
-    - [a[0]*cos(atan(b[0]/a[0])) , 0]
-    + [b[1]*cos(atan(a[1]/b[1])) , 0],
+    - [a[0]*cos(atan(b[0]/a[0])), 0]
+    + [b[1]*cos(atan(a[1]/b[1])), 0],
 
     for(index = [0:fn-1]) // section Top
      let(theta2 = atan(b[0]/a[0]) + 180 + (180 -2*atan(b[0]/a[0]))*index/fn)
