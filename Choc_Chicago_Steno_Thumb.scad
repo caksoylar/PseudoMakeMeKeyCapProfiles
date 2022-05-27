@@ -176,7 +176,6 @@ function DishShape2 (a, b, phi = 200, theta, r) =
       +r*sin(sig)]
     ],
 
-
     [[a, b*sin(phi)-r*sin(theta)*2]] // boundary vertex to clear ends
   );
 
@@ -287,14 +286,12 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
           translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=1 /*StemRadius(i, keyID) */ ))]); // outer shell
-       }
-
-     }
-    // cut for fonts and extra pattern for light?
-     if(visualizeDish == true && Dish == true){
-      #translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
-     }
+        }
+      }
+      if(visualizeDish == true && Dish == true){
+        #translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
+        #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
+      }
     }
 
     // Cuts
@@ -305,8 +302,8 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     }
     if(Legends ==  true){
       #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      }
-   // Dish Shape
+    }
+    // Dish Shape
     if(Dish == true){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
@@ -315,8 +312,11 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
       translate([0, -25, -.1])cube([15, 50, 15]);
     }
   }
+
   // Homing dot
-  if(homeDot == true)translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1);
+  if(homeDot == true){
+    translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1);
+  }
 }
 
 // ------------------stems

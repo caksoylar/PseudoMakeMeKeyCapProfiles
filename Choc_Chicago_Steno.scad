@@ -100,7 +100,6 @@ dishParameters = // dishParameter[keyID][ParameterID]
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
 ];
 
-
 function BottomWidth(keyID)  = keyParameters[keyID][0];
 function BottomLength(keyID) = keyParameters[keyID][1];
 function TopWidthDiff(keyID) = keyParameters[keyID][2];
@@ -274,24 +273,22 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
     }
     if(Legends ==  true){
       #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      }
-   // Dish Shape
+    }
+    // Dish Shape
     if(Dish == true){
-     if(visualizeDish == false){
-      translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-      translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
-     } else {
-      #translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
+      if(visualizeDish == false){
+        translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
+        translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
      }
-   }
-     if(crossSection == true) {
-       translate([0, -25, -.1])cube([15, 50, 15]);
-     }
+    }
+    if(crossSection == true) {
+      translate([0, -25, -.1])cube([15, 50, 15]);
+    }
   }
+
   // Homing dot
   if(homeDot == true){
-    translate([2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
+    translate([ 2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
     translate([-2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
   }
 }
