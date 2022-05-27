@@ -260,8 +260,6 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
 
   FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape2(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))) ];
   BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape2(DishDepth(keyID), BackDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))) ];
-//  for(i=[0:len(FrontPath)-1])echo ( len(transform(FrontPath[i], DishShape2( a= DishDepth(keyID), b= FrontDishArc(i), phi = TransitionAngleInit(keyID), theta= 60
-//   , r = FTanRadius(i, keyID)))), TanTransition(i, keyID));
 
   // builds
   difference(){
@@ -277,7 +275,7 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
       if(Stem == true){
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
-          translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=1 /*StemRadius(i, keyID) */ ))]); // outer shell
+          translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // outer shell
         }
       }
     }
