@@ -134,6 +134,13 @@ function BackPitch2(keyID)    = dishParameters[keyID][12];
 function BackInitArc(keyID)   = dishParameters[keyID][13];
 function BackFinArc(keyID)    = dishParameters[keyID][14];
 function BackArcExpo(keyID)   = dishParameters[keyID][15];
+function ForwardTanInit(keyID)= dishParameters[keyID][16];
+function ForwardTanFin(keyID) = dishParameters[keyID][17];
+function BackTanInit(keyID)   = dishParameters[keyID][18];
+function BackTanFin(keyID)    = dishParameters[keyID][19];
+function TanArcExpo(keyID)    = dishParameters[keyID][20];
+function TransitionAngleInit(keyID) = dishParameters[keyID][21];
+function TransitionAngleFin(keyID)  = dishParameters[keyID][22];
 
 function FrontTrajectory(keyID) =
   [
@@ -233,9 +240,11 @@ function StemTransform(t, keyID) =
 function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3))*1;
   // Stem Exponent
 
+function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*ForwardTanInit(keyID) + (1-pow(t/stepsize, TanArcExpo(keyID)))*ForwardTanFin(keyID);
+function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*BackTanInit(keyID)    + (1-pow(t/stepsize, TanArcExpo(keyID)))*BackTanFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, thumb = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -245,8 +254,11 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
   function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID)   + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
 
-  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(a = DishDepth(keyID), b = FrontDishArc(i))) ];
-  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(a = DishDepth(keyID), b = BackDishArc(i))) ];
+  
+  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], thumb ? DishShape(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))
+                                                                           : DishShape(a = DishDepth(keyID), b = FrontDishArc(i))) ];
+  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  thumb ? DishShape(a = DishDepth(keyID), b = BackDishArc(i),  phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))
+                                                                           : DishShape(a = DishDepth(keyID), b = BackDishArc(i))) ];
 
   // builds
   difference(){
@@ -255,11 +267,11 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
         skin([for (i=[0:layers-1]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(CapTransform(i, keyID), b = CapRoundness(i, keyID), fn=fn))]); // outer shell
 
         // Cut inner shell
-        if(Stem == true){
+        if(Stem){
           translate([0, 0, -.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(InnerTransform(i, keyID), b = CapRoundness(i, keyID), fn=fn))]);
         }
       }
-      if(Stem == true){
+      if(Stem){
         rotate([0, 0, StemRot]){
           choc_stem(draftAng = draftAngle);
           translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // outer shell
@@ -273,23 +285,27 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
       translate([sign(cutLen)*(BottomLength(keyID)+CapRound0i(keyID)+abs(cutLen))/2, 0, 0])
         cube([BottomWidth(keyID)+CapRound1i(keyID)+1, BottomLength(keyID)+CapRound0i(keyID), 50], center = true);
     }
-    if(Legends ==  true){
+    if(Legends){
       #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
     }
     // Dish Shape
-    if(Dish == true){
+    if(Dish){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
     }
-    if(crossSection == true) {
+    if(crossSection) {
       translate([0, -25, -.1])cube([15, 50, 15]);
     }
   }
 
   // Homing dot
-  if(homeDot == true){
-    translate([ 2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
-    translate([-2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
+  if(homeDot){
+    if(thumb){
+      translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1);
+    } else {
+      translate([ 2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
+      translate([-2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
+    }
   }
 }
 
