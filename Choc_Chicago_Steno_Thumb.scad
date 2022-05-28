@@ -221,8 +221,8 @@ function InnerTransform(t, keyID) =
 
 function StemTranslation(t, keyID) =
   [
-    0,   // X shift
-    0,   // Y shift
+    ((1-t)/stemLayers*TopWidShift(keyID)),   // X shift
+    ((1-t)/stemLayers*TopLenShift(keyID)),   // Y shift
     stemCrossHeight+.1 + (t/stemLayers*(KeyHeight(keyID)- topthickness - stemCrossHeight-.1))    // Z shift
   ];
 
