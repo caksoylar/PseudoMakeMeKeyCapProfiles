@@ -243,10 +243,10 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
 
   // Scaling initial and final dim tranformation by exponents
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
-  function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
+  function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID)   + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
 
-  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(DishDepth(keyID), FrontDishArc(i))) ];
-  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(DishDepth(keyID),  BackDishArc(i))) ];
+  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(a = DishDepth(keyID), b = FrontDishArc(i))) ];
+  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(a = DishDepth(keyID), b = BackDishArc(i))) ];
 
   // builds
   difference(){

@@ -235,20 +235,19 @@ function StemTransform(t, keyID) =
 function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3))*1;
   // Stem Exponent
 
-function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*ForwardTanInit(keyID) + (1-pow(t/stepsize, TanArcExpo(keyID) ))*ForwardTanFin(keyID);
-function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*BackTanInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*BackTanFin(keyID);
-function TanTransition(t, keyID) = pow(t/stepsize, TanArcExpo(keyID) )*TransitionAngleInit(keyID)  + (1-pow(t/stepsize, TanArcExpo(keyID) ))*TransitionAngleFin(keyID);
+function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*ForwardTanInit(keyID) + (1-pow(t/stepsize, TanArcExpo(keyID)))*ForwardTanFin(keyID);
+function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*BackTanInit(keyID)    + (1-pow(t/stepsize, TanArcExpo(keyID)))*BackTanFin(keyID);
 
 // /----- KEY Builder Module
 module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
-  FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
-  BackPath  = quantize_trajectories(BackTrajectory(keyID),  steps = stepsize, loop=false, start_position= $t*4);
+  FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
+  BackPath  = quantize_trajectories(BackTrajectory(keyID),  steps = stepsize, loop=false);
 
   // Scaling initial and final dim tranformation by exponents
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
-  function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
+  function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID)   + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
 
   FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))) ];
   BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(a = DishDepth(keyID), b = BackDishArc(i),  phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))) ];
