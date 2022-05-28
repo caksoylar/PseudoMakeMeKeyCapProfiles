@@ -153,16 +153,8 @@ function BackTrajectory (keyID) =
 
 function ellipse(a, b, d = 0, rot1 = 0, rot2 = 360) = [for (t = [rot1:step:rot2]) [a*cos(t)+a, b*sin(t)*(1+d*cos(t))]]; // Centered at a apex to avoid inverted face
 
-function DishShape (a, b, c, d) =
+function DishShape(a, b, phi = 270, theta = 0, r) =
   concat(
-//   [[c+a, b]],
-    ellipse(a, b, d = 0, rot1 = 90, rot2 = 270)
-//   [[c+a, -b]]
-  );
-
-function DishShape2 (a, b, phi = 200, theta, r) =
-  concat(
-//   [[c+a, b]],
     ellipse(a, b, d = 0, rot1 = 90, rot2 = phi),
     [for (t = [step:step*2:theta])let(sig = atan(a*cos(phi)/-b*sin(phi)))
       [ r*cos(-atan(-a*cos(phi)/b*sin(phi))-t)
@@ -175,7 +167,7 @@ function DishShape2 (a, b, phi = 200, theta, r) =
       +r*sin(sig)]
     ],
 
-    [[a, b*sin(phi)-r*sin(theta)*2]] // boundary vertex to clear ends
+	theta > 0 ? [[a, b*sin(phi)-r*sin(theta)*2]] : [] // boundary vertex to clear ends
   );
 
 function oval_path(theta, phi, a, b, c, deform = 0) = [
@@ -258,8 +250,8 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
   function BackDishArc(t)  =  pow((t)/(len(FrontPath)), BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)), BackArcExpo(keyID)))*BackInitArc(keyID);
 
-  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape2(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))) ];
-  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape2(DishDepth(keyID), BackDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))) ];
+  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))) ];
+  BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(a = DishDepth(keyID), b = BackDishArc(i),  phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))) ];
 
   // builds
   difference(){
