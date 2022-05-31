@@ -81,23 +81,6 @@ dishParameters = // dishParameter[keyID][ParameterID]
   [   5,  3.5,    8,  -50,      5,    1.8,   8.8,    15,     2,       6,    4,   13,   30,  8.8,    16,     2], // R1
 ];
 
-function FrontForward1(keyID) = dishParameters[keyID][0];
-function FrontForward2(keyID) = dishParameters[keyID][1];
-function FrontPitch1(keyID)   = dishParameters[keyID][2];
-function FrontPitch2(keyID)   = dishParameters[keyID][3];
-function DishDepth(keyID)     = dishParameters[keyID][4];
-function DishHeightDif(keyID) = dishParameters[keyID][5];
-function FrontInitArc(keyID)  = dishParameters[keyID][6];
-function FrontFinArc(keyID)   = dishParameters[keyID][7];
-function FrontArcExpo(keyID)  = dishParameters[keyID][8];
-function BackForward1(keyID)  = dishParameters[keyID][9];
-function BackForward2(keyID)  = dishParameters[keyID][10];
-function BackPitch1(keyID)    = dishParameters[keyID][11];
-function BackPitch2(keyID)    = dishParameters[keyID][12];
-function BackInitArc(keyID)   = dishParameters[keyID][13];
-function BackFinArc(keyID)    = dishParameters[keyID][14];
-function BackArcExpo(keyID)   = dishParameters[keyID][15];
-
 function BottomWidth(keyID)  = keyParameters[keyID][0];
 function BottomLength(keyID) = keyParameters[keyID][1];
 function TopWidthDiff(keyID) = keyParameters[keyID][2];
@@ -116,6 +99,23 @@ function CapRound1i(keyID)   = keyParameters[keyID][14];
 function CapRound1f(keyID)   = keyParameters[keyID][15];
 function ChamExponent(keyID) = keyParameters[keyID][16];
 function StemExponent(keyID) = keyParameters[keyID][17];
+
+function FrontForward1(keyID) = dishParameters[keyID][0];
+function FrontForward2(keyID) = dishParameters[keyID][1];
+function FrontPitch1(keyID)   = dishParameters[keyID][2];
+function FrontPitch2(keyID)   = dishParameters[keyID][3];
+function DishDepth(keyID)     = dishParameters[keyID][4];
+function DishHeightDif(keyID) = dishParameters[keyID][5];
+function FrontInitArc(keyID)  = dishParameters[keyID][6];
+function FrontFinArc(keyID)   = dishParameters[keyID][7];
+function FrontArcExpo(keyID)  = dishParameters[keyID][8];
+function BackForward1(keyID)  = dishParameters[keyID][9];
+function BackForward2(keyID)  = dishParameters[keyID][10];
+function BackPitch1(keyID)    = dishParameters[keyID][11];
+function BackPitch2(keyID)    = dishParameters[keyID][12];
+function BackInitArc(keyID)   = dishParameters[keyID][13];
+function BackFinArc(keyID)    = dishParameters[keyID][14];
+function BackArcExpo(keyID)   = dishParameters[keyID][15];
 
 function FrontTrajectory(keyID) =
   [
@@ -142,12 +142,11 @@ function DishShape (a, b, c, d) =
 
 function oval_path(theta, phi, a, b, c, deform = 0) = [
  a*cos(theta)*cos(phi), // x
- c*sin(theta)*(1+deform*cos(theta)) , //
+ c*sin(theta)*(1+deform*cos(theta)), //
  b*sin(phi),
 ];
 
 path_trans2 = [for (t=[0:step:180])   translation(oval_path(t, 0, 10, 15, 2, 0))*rotation([0, 90, 0])];
-
 
 // --------------Function definng Cap
 function CapTranslation(t, keyID) =
@@ -173,7 +172,7 @@ function CapRotation(t, keyID) =
 
 function CapTransform(t, keyID) =
   [
-    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID) ,
+    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID),
     pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)) + (1-pow(t/layers, LenExponent(keyID)))*BottomLength(keyID)
   ];
 function CapRoundness(t, keyID) =
@@ -218,8 +217,8 @@ function StemRadius(t, keyID) = pow(t/stemLayers, 3)*3 + (1-pow(t/stemLayers, 3)
 module keycap(keyID = 0, cutLen = 0, visualizeDish = false, csrossSection = false, Dish = true, Stem = false, StemRot = 0, homeDot = false, Stab = 0) {
 
   // Set Parameters for dish shape
-  FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
-  BackPath  = quantize_trajectories(BackTrajectory(keyID),  steps = stepsize, loop=false, start_position= $t*4);
+  FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
+  BackPath  = quantize_trajectories(BackTrajectory(keyID),  steps = stepsize, loop=false);
 
   // Scaling initial and final dim tranformation by exponents
   function FrontDishArc(t) =  pow((t)/(len(FrontPath)), FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
@@ -235,45 +234,35 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, csrossSection = fals
         skin([for (i=[0:layers-1]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(CapTransform(i, keyID), b = CapRoundness(i, keyID), fn=fn))]); // outer shell
 
         // Cut inner shell
-        if(Stem == true){
+        if(Stem){
           translate([0, 0, -.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(InnerTransform(i, keyID), b = CapRoundness(i, keyID), fn=fn))]);
         }
       }
-      if(Stem == true){
-        translate([0, 0, StemBrimDep])rotate([0, 0, StemRot])choc_stem();
-        if (Stab != 0){
-//          translate([Stab/2, 0, 0])rotate([0, 0, stemRot])cherry_stem(KeyHeight(keyID), slop);
-//          translate([-Stab/2, 0, 0])rotate([0, 0, stemRot])cherry_stem(KeyHeight(keyID), slop);
-          // TODO add binding support?
-        }
-        rotate([0, 0, StemRot])translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID))*rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // Transition Support for taller profile
+      if(Stem){
+        rotate([0, 0, StemRot]) {choc_stem();
+
+          translate([0, 0, -.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), fn=fn, r=StemRadius(i, keyID)))]); // Transition Support for taller profile
+          }
       }
-    // cut for fonts and extra pattern for light?
     }
 
     // Cuts
-
     // Fonts
-    if(Legends ==  true){
+    if(Legends){
           #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      //  #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([0, -3.5, 0])linear_extrude(height = 0.5)text( text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
       }
    // Dish Shape
-    if(Dish == true){
-     if(visualizeDish == false){
+    if(Dish){
       translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(BackCurve);
-     } else {
-      #translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])skin(BackCurve);
-     }
-   }
-     if(crossSection == true) {
-       translate([0, -15, -.1])cube([15, 30, 15]);
-     }
+    }
+    if(crossSection) {
+      translate([0, -15, -.1])cube([15, 30, 15]);
+    }
   }
+
   // Homing dot
-  if(homeDot == true)translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = dotRadius);
+  if(homeDot)translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = dotRadius);
 }
 
 // ------------------stems
@@ -316,8 +305,8 @@ function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
     for (index = [0:fn-1]) // section right
      let(theta1 = -atan(a[1]/b[1])+ 2*atan(a[1]/b[1])*index/fn)
       [b[1]*cos(theta1), a[1]*sin(theta1)]
-    + [a[0]*cos(atan(b[0]/a[0])) , 0]
-    - [b[1]*cos(atan(a[1]/b[1])) , 0],
+    + [a[0]*cos(atan(b[0]/a[0])), 0]
+    - [b[1]*cos(atan(a[1]/b[1])), 0],
 
     for(index = [0:fn-1]) // section Top
      let(theta2 = atan(b[0]/a[0]) + (180 -2*atan(b[0]/a[0]))*index/fn)
@@ -328,8 +317,8 @@ function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
     for(index = [0:fn-1]) // section left
      let(theta2 = -atan(a[1]/b[1])+180+ 2*atan(a[1]/b[1])*index/fn)
       [b[1]*cos(theta2), a[1]*sin(theta2)]
-    - [a[0]*cos(atan(b[0]/a[0])) , 0]
-    + [b[1]*cos(atan(a[1]/b[1])) , 0],
+    - [a[0]*cos(atan(b[0]/a[0])), 0]
+    + [b[1]*cos(atan(a[1]/b[1])), 0],
 
     for(index = [0:fn-1]) // section Top
      let(theta2 = atan(b[0]/a[0]) + 180 + (180 -2*atan(b[0]/a[0]))*index/fn)
@@ -347,28 +336,3 @@ function sign_y(i, n) =
 	i > 0 && i < n/2  ?  1 :
 	i > n/2 ? -1 :
 	0;
-
-/*lp_key = [
-//     "base_sx", 18.5,
-//     "base_sy", 18.5,
-     "base_sx", 17.65,
-     "base_sy", 16.5,
-     "cavity_sx", 16.1,
-     "cavity_sy", 14.9,
-     "cavity_sz", 1.6,
-     "cavity_ch_xy", 1.6,
-     "indent_inset", 1.5
-     ];
-Choc Chord version Chicago Stenographer
-#square([18.16, 18.16], center = true);
-translate([0, 19, 0])keycap(keyID = 1, cutLen = 0, Stem =false,  Dish = true, Stab = 0 , visualizeDish = true, crossSection = false, homeDot = false, Legends = false);
-translate([0, 0, 0])lp_master_base(xu = 2, yu = 1 );
-stem_cavity_negative(lp_key, x=1, y=1);
-}
-#translate([0, 0, 0])cube([14.5, 13.5, 10], center = true); // internal check
-#translate([0, 0, 0])cube([17.5, 16.5, 10], center = true); // external check
-translate([0, 17, 0])mirror([0, 1, 0])keycap(keyID = 0, cutLen = 0, Stem =false,  Dish = true, Stab = 0 , visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-translate([18, 0, 0])mirror([0, 0, 0])keycap(keyID = 0, cutLen = 0, Stem =false,  Dish = true, Stab = 0 , visualizeDish = false, crossSection = false, homeDot = false, Legends = false);
-n translate([0, 19, 0])keycap(keyID = 3, cutLen = 0, Stem =true,  Dish = true, visualizeDish = true, crossSection = true, homeDot = false, Legends = false);
- translate([0, 38, 0])mirror([0, 1, 0])keycap(keyID = 2, cutLen = 0, Stem =true,  Dish = true, visualizeDish = false, crossSection = true, homeDot = false, Legends = false);
-*/
