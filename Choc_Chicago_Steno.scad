@@ -16,7 +16,9 @@ keycap(
   Dish    = true,        // turn on dish cut
   crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
-  Legends = false
+  Legends = false,
+  thumb = false,         // turn on for thumb keys (keyID = 2 -> 4)
+  convex = false         // turn on for convex keys (keyID = 5 -> 6)
 );
 
 // -Parameters
@@ -42,14 +44,18 @@ draftAngle = 0; // degree  note:Stem Only
 keyParameters =
 [
 //BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
-  // Regular keys
+  // Regular keys: keyID = 0 -> 1
   [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,      2], // Chicago Steno R2/R4
   [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,      2], // Chicago Steno R3 flat
 
-  // Thumb
+  // Thumb:        keyID = 2 -> 4
   [17.20,  16.00,  4.25,  3.25,  5.0,  -.5,  0.0,    -3,    -3,    -0,   2,   2,    .10,      2,     .10,      2,     2,      2], // Thumb 1
   [15.65,   26.4,   5.5,  3.25,  4.9,  -.5,  0.0,    -3,    -2,    -2,   2,   2,     .3,      2,      .3,    2.5,     2,      2], // Thumb 1.5
   [15.65,   35.8,  4.25,  3.25,  4.9, -.25,  0.0,  -2.5,    -4,    -2,   2,   3,     .3,      2,      .3,    2.5,     2,      2], // Thumb 2.0
+
+  // Convex:       keyID = 5 -> 6
+  [17.20,  16.00,   5.6, 	   5,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .10,      3,     .10,      3,     2,       2], // Chicago Steno R3x 1u
+  [35.85,  15.65,     7, 	   7,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .30,      5,     .30,      5,     2,       2], // Chicago Steno R3x 2u
 ];
 
 dishParameters = // dishParameter[keyID][ParameterID]
@@ -64,6 +70,10 @@ dishParameters = // dishParameter[keyID][ParameterID]
   [    5,   5.5,     0,   -40,      7,     1.7,     16,     18,      2,   5.5,   3.5,     5,   -50,     16,     18,      2,     5,  3.75,     2,  3.75,     2,     199,    210], // T1
   [   10,   4.5,     0,   -40,      7,     1.7,     16,     15,      2,    10,   3.5,     5,   -50,     16,     18,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 1.5u
   [ 14.5,   4.5,     4,   -40,      7,     1.7,     16,     18,      2,  14.5,   4.5,     2,   -35,     16,     23,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 2.0u
+
+  // Convex
+  [ 4.5,  3.3,   -3,  -45,    1.5,   3.75,   8.5,   8.7,     2,     -4.5,  -3.3,   3,  45,  8.5,   8.7,     2], // R3x 1u
+  [ 4.5,  3.2,   -5,  -45,    1.5,   3.75,  19.0,    18,     2,     -4.5,  -3.2,   5,  45, 19.0,    18,     2], // R3x 2u
 ];
 
 function BottomWidth(keyID)  = keyParameters[keyID][0];
@@ -142,6 +152,13 @@ function DishShape(a, b, phi = 270, theta = 0, r) =
 	theta > 0 ? [[a, b*sin(phi)-r*sin(theta)*2]] : [] // boundary vertex to clear ends
   );
 
+function DishShapeConvex(a, b, c) =
+  concat(
+   [[c+a, -b]],
+   ellipse(a, b, d = 0, rot1 = 270, rot2 = 450),
+   [[c+a, b]]
+  );
+
 function oval_path(theta, phi, a, b, c, deform = 0) = [
  a*cos(theta)*cos(phi), // x
  c*sin(theta)*(1+deform*cos(theta)), //
@@ -211,7 +228,7 @@ function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*ForwardTanIni
 function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*BackTanInit(keyID)    + (1-pow(t/stepsize, TanArcExpo(keyID)))*BackTanFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, thumb = false, StemRot = 0, homeDot = false, Legends = false) {
+module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, thumb = false, convex = false, StemRot = 0, homeDot = false, Legends = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -223,9 +240,11 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
 
   
   FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], thumb ? DishShape(a = DishDepth(keyID), b = FrontDishArc(i), phi = TransitionAngleInit(keyID), theta = 60, r = FTanRadius(i, keyID))
-                                                                           : DishShape(a = DishDepth(keyID), b = FrontDishArc(i))) ];
+                                                                           : convex ? DishShapeConvex(DishDepth(keyID), FrontDishArc(i), DishDepth(keyID)+1.5)
+                                                                                    : DishShape(a = DishDepth(keyID), b = FrontDishArc(i))) ];
   BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  thumb ? DishShape(a = DishDepth(keyID), b = BackDishArc(i),  phi = TransitionAngleInit(keyID), theta = 60, r = BTanRadius(i, keyID))
-                                                                           : DishShape(a = DishDepth(keyID), b = BackDishArc(i))) ];
+                                                                           : convex ? DishShapeConvex(DishDepth(keyID), BackDishArc(i),  DishDepth(keyID)+1.5)
+                                                                                    : DishShape(a = DishDepth(keyID), b = BackDishArc(i))) ];
 
   // builds
   difference(){
@@ -258,7 +277,7 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
     // Dish Shape
     if(Dish){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
-      translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(BackCurve);
+      translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), (convex ? 270 : 90)-ZAngleSkew(keyID)])skin(BackCurve);
     }
     if(crossSection) {
       translate([0, -25, -.1])cube([15, 50, 15]);
