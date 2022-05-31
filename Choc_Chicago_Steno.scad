@@ -34,69 +34,36 @@ stemLen = 6;
 stemCrossHeight = 1.8;
 extra_vertical = 0.6;
 stemLayers = 50; // resolution of stem to cap top transition
-// #cube([18.16, 18.16, 10], center = true); // sanity check border
 
 // injection param
 draftAngle = 0; // degree  note:Stem Only
 // TODO: Add wall thickness transition?
 
-keyParameters = // keyParameters[KeyID][ParameterID]
+keyParameters =
 [
-//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
-    // Column 0
-    // Levee: Chicago in choc Dimension
-    [17.20,  16.00,   5.6, 	   5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R2/R4
-    [17.20,  16.00,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], // Chicago Steno R3 flat
-    [17.20,  16.00,  1.25, 	1.25,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,     .5,     .10,     .5,     2,       2], // Chicago Steno R3 chord
-    // mods 3
-    [17.20,  16.00,  4.25, 	3.25,  5.5,  -.7,  0.7,     0,    -4,    -0,   2,   2,    .10,      2,     .10,      2,     2,       2], // Levee Corner R2
-    [17.20,  16.00,  4.25, 	3.25,  5.2,  -.8,  0.6,     0,    -4,    -0,   2,   3,    .10,      2,     .10,      2,     2,       2], // Levee Corner R2
-    // 1.25 5
-    [21.3,   15.60,  5.6, 	   5,  4.5,    0,   .0,     5,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R2/R4 1.25u
-    [21.4,   15.60,  5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R3 1.25u
-    // 1.5 7
-    [26.15,  15.60,   5.6, 	   5,  4.5,    0,   .0,     5,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R2/R4 1.5
-    [26.15,  15.60,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R3 1.5u
-    // 1.75 9
-    [30.90,  15.60,   5.6, 	   5,  4.5,    0,   .0,     5,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R2/R4 1.5
-    [30.90,  15.60,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R3 1.5u
-    // 2.00 11
-    [35.70,  15.60,   5.6, 	   5,  4.5,    0,   .0,     5,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R2/R4 1.5
-    [30.90,  15.60,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2,   2,     .5,      3,      .5,      3,     2,       2], // Chicago Steno R3 1.5u
-    // Ergo shits
-    [18.75,  18.75,   5.6, 	   5,    8,    0,  .25,      0,    -0,    -0,  2, 2.5,    .10,      3,     .10,      3,     2,       2], // highpro 19.05 R2|4
-    [17.20,  16.00,   5.6, 	   5,  4.7,    0,   .0,      3,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R2 ALT
-    [17.20,  16.00,   5.6, 	   5,  5.5,    0,   .0,      7,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R1 Steap
-    [17.20,  16.00,   5.6, 	   5,  7.0,    0,   .0,     10,    -0,    -0,  2, 2.5,    .10,      2,     .10,      3,     2,       2], // Chicago Steno R1 mild with alt R2
+//BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+  // Regular keys
+  [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,      2], // Chicago Steno R2/R4
+  [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,      2], // Chicago Steno R3 flat
+
+  // Thumb
+  [17.20,  16.00,  4.25,  3.25,  5.0,  -.5,  0.0,    -3,    -3,    -0,   2,   2,    .10,      2,     .10,      2,     2,      2], // Thumb 1
+  [15.65,   26.4,   5.5,  3.25,  4.9,  -.5,  0.0,    -3,    -2,    -2,   2,   2,     .3,      2,      .3,    2.5,     2,      2], // Thumb 1.5
+  [15.65,   35.8,  4.25,  3.25,  4.9, -.25,  0.0,  -2.5,    -4,    -2,   2,   3,     .3,      2,      .3,    2.5,     2,      2], // Thumb 2.0
 ];
 
 dishParameters = // dishParameter[keyID][ParameterID]
 [
-// FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
-  // Column 0
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11,    15,     2,      4.5,    4,    5,   -40,   11,    15,     2], // Chicago Steno R3 flat
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11,    15,     2,      4.5,    4,    5,   -40,   11,    15,     2], // Chicago Steno R3 chord
+//FFwd1, FFwd2, FPit1, FPit2,  DshDep, DshHDif, FArcIn, FArcFn, FArcEx, BFwd1, BFwd2, BPit1, BPit2, BArcIn, BArcFn, BArcEx
+  // Regular keys
+  [ 4.5,     4,     7,   -50,       7, 1.    7,     11,     17,      2,   4.5,     4,     2,   -35,     11,     15,      2], // Chicago Steno R2/R4
+  [ 4.5,     4,     5,   -40,       7, 1.    7,     11,     15,      2,   4.5,     4,     5,   -40,     11,     15,      2], // Chicago Steno R3 flat
 
-  [   6,  3.5,    7,  -50,      5,    1.0,   16,    23,     2,        6,  3.5,    7,   -50,   16,    23,     2], // Levee Steno R2/R4
-  [   6,  3.5,    7,  -50,      5,    1.0,   16,    23,     2,        6,  3.5,    7,   -50,   16,    23,     2], // Levee Steno R2/R4
-  // 1.25
-  [ 4.5,    4,    7,  -40,      8,    1.8,   15,    20,     2,      4.5,    4,    2,   -35,   15,    20,     2], // Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.8,   15,    20,     2,      4.5,    4,    5,   -40,   15,    20,     2], // Chicago Steno R3
-  // 1.5
-  [ 4.5,    4,    7,  -40,      8,    1.8,   19,    25,     2,      4.5,    4,    2,   -35,   19,    25,     2], // Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.8,   19,    25,     2,      4.5,    4,    5,   -40,   19,    25,     2], // Chicago Steno R3
-  // 1.75
-  [ 4.5,    4,    7,  -40,      8,    1.8,   22.5,  27,     2,      4.5,    4,    2,   -35,   22.5,  27,     2], // Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.8,   22.5,  27,     2,      4.5,    4,    5,   -40,   22.5,  27,     2], // Chicago Steno R3
-  // 2.00
-  [ 4.5,    4,    7,  -40,      8,    1.8,   22.5,  27,     2,      4.5,    4,    2,   -35,   22.5,  27,     2], // Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.8,   22.5,  27,     2,      4.5,    4,    5,   -40,   22.5,  27,     2], // Chicago Steno R3
-
-  [   5,    5,    5,  -40,      7,    1.7,   11,    15,     2,        5,    5,    5,   -40,   11,    15,     2], // Chicago Steno R3 flat
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], // Chicago Steno R1
+// FFwd1, FFwd2, FPit1, FPit2, DshDep, DshHDif, FArcIn, FArcFn, FArcEx, BFwd1, BFwd2, BPit1, BPit2, BArcIn, BArcFn, BArcEx, FTani, FTanf, BTani, BTanf, TanEX, PhiInit, PhiFin
+  // Thumb
+  [    5,   5.5,     0,   -40,      7,     1.7,     16,     18,      2,   5.5,   3.5,     5,   -50,     16,     18,      2,     5,  3.75,     2,  3.75,     2,     199,    210], // T1
+  [   10,   4.5,     0,   -40,      7,     1.7,     16,     15,      2,    10,   3.5,     5,   -50,     16,     18,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 1.5u
+  [ 14.5,   4.5,     4,   -40,      7,     1.7,     16,     18,      2,  14.5,   4.5,     2,   -35,     16,     23,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 2.0u
 ];
 
 function BottomWidth(keyID)  = keyParameters[keyID][0];
