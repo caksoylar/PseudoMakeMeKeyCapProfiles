@@ -56,8 +56,8 @@ dishParameters = // dishParameter[keyID][ParameterID]
 [
 //FFwd1, FFwd2, FPit1, FPit2,  DshDep, DshHDif, FArcIn, FArcFn, FArcEx, BFwd1, BFwd2, BPit1, BPit2, BArcIn, BArcFn, BArcEx
   // Regular keys
-  [ 4.5,     4,     7,   -50,       7, 1.    7,     11,     17,      2,   4.5,     4,     2,   -35,     11,     15,      2], // Chicago Steno R2/R4
-  [ 4.5,     4,     5,   -40,       7, 1.    7,     11,     15,      2,   4.5,     4,     5,   -40,     11,     15,      2], // Chicago Steno R3 flat
+  [ 4.5,     4,     7,   -50,       7,     1.7,     11,     17,      2,   4.5,     4,     2,   -35,     11,     15,      2], // Chicago Steno R2/R4
+  [ 4.5,     4,     5,   -40,       7,     1.7,     11,     15,      2,   4.5,     4,     5,   -40,     11,     15,      2], // Chicago Steno R3 flat
 
 // FFwd1, FFwd2, FPit1, FPit2, DshDep, DshHDif, FArcIn, FArcFn, FArcEx, BFwd1, BFwd2, BPit1, BPit2, BArcIn, BArcFn, BArcEx, FTani, FTanf, BTani, BTanf, TanEX, PhiInit, PhiFin
   // Thumb
