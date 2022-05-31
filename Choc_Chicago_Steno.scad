@@ -8,18 +8,17 @@ use <skin.scad>
 
 // Choc Chord version Chicago Stenographer
 
+/*
 keycap(
   keyID   = 1,           // change profile refer to KeyParameters Struct
-  cutLen  = 0,           // Don't change. for chopped caps
   Stem    = true,        // turn on shell and stems
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
-  crossSection  = false, // center cut to check internal
   homeDot = false,       // turn on homedots
-  Legends = false,
   thumb = false,         // turn on for thumb keys (keyID = 2 -> 4)
   convex = false         // turn on for convex keys (keyID = 5 -> 6)
 );
+*/
 
 // -Parameters
 wallthickness = 1.1; // 1.75 for mx size, 1.1
@@ -228,7 +227,7 @@ function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*ForwardTanIni
 function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*BackTanInit(keyID)    + (1-pow(t/stepsize, TanArcExpo(keyID)))*BackTanFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = false, thumb = false, convex = false, StemRot = 0, homeDot = false, Legends = false) {
+module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, convex = false, StemRot = 0, homeDot = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -266,21 +265,10 @@ module keycap(keyID = 0, cutLen = 0, crossSection = false, Dish = true, Stem = f
     }
 
     // Cuts
-    // Fonts
-    if(cutLen != 0){
-      translate([sign(cutLen)*(BottomLength(keyID)+CapRound0i(keyID)+abs(cutLen))/2, 0, 0])
-        cube([BottomWidth(keyID)+CapRound1i(keyID)+1, BottomLength(keyID)+CapRound0i(keyID), 50], center = true);
-    }
-    if(Legends){
-      #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([-1, -5, KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-    }
     // Dish Shape
     if(Dish){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), (convex ? 270 : 90)-ZAngleSkew(keyID)])skin(BackCurve);
-    }
-    if(crossSection) {
-      translate([0, -25, -.1])cube([15, 50, 15]);
     }
   }
 
