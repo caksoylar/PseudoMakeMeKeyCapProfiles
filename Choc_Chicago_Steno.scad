@@ -298,9 +298,10 @@ module choc_stem(draftAng = 5) {
   r = 0.1;       // radius of the corners
   wids = 1.0/2;  // half width of the stems
   lens = 2.9/2;  // half length of the stems
+  taper = 0.02;  // percentage difference between top and bottom of stem widths
   module Stem() {
     difference(){
-      translate([0, 0, -stemHeight/2])linear_extrude(height = stemHeight)hull(){
+      translate([0, 0, -stemHeight/2])linear_extrude(height = stemHeight, scale = 1+taper)scale([1/(1+taper), 1/(1+taper), 1])hull(){
         translate([wids-r,-lens+r])circle(r=r);
         translate([-wids+r,-lens+r])circle(r=r);
         translate([wids-r, lens-r])circle(r=r);
