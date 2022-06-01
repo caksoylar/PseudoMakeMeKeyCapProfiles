@@ -282,10 +282,10 @@ module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, symmetric = fa
   // Homing dot
   if(homeDot){
     if(thumb){
-      translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1);
+      translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = 1.25);
     } else {
-      translate([ 2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
-      translate([-2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1);
+      translate([ 2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1.25);
+      translate([-2, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+.15])sphere(d = 1.25);
     }
   }
 }
