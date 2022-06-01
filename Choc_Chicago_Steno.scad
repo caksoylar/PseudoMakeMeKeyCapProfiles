@@ -38,7 +38,7 @@ extra_vertical = 0.6;
 stemLayers = 50; // resolution of stem to cap top transition
 
 // injection param
-draftAngle = 0; // degree  note:Stem Only
+draftAngle = 2; // degree  note:Stem Only
 // TODO: Add wall thickness transition?
 
 keyParameters =
@@ -295,9 +295,9 @@ $fn = fn;
 
 module choc_stem(draftAng = 5) {
   stemHeight = 3.1;
-  r = .075;      // radius of the corners
-  wids = 1.05/2; // half width of the stems
-  lens = 3.15/2; // half length of the stems
+  r = 0.1;       // radius of the corners
+  wids = 1.0/2;  // half width of the stems
+  lens = 2.9/2;  // half length of the stems
   module Stem() {
     difference(){
       translate([0, 0, -stemHeight/2])linear_extrude(height = stemHeight)hull(){
