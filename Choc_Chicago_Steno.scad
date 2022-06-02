@@ -294,11 +294,11 @@ module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, symmetric = fa
 $fn = fn;
 
 module choc_stem(draftAng = 5) {
-  stemHeight = 3.1;
+  stemHeight = 3.5;
   r = 0.1;       // radius of the corners
-  wids = 1.0/2;  // half width of the stems
+  wids = 1.05/2;  // half width of the stems
   lens = 2.9/2;  // half length of the stems
-  taper = 0.02;  // percentage difference between top and bottom of stem widths
+  taper = 0.05;  // percentage difference between top and bottom of stem widths
   module Stem() {
     difference(){
       translate([0, 0, -stemHeight/2])linear_extrude(height = stemHeight, scale = 1+taper)scale([1/(1+taper), 1/(1+taper), 1])hull(){
