@@ -294,10 +294,10 @@ module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, symmetric = fa
 $fn = fn;
 
 module choc_stem(draftAng = 5) {
-  stemHeight = 3.5;
+  stemHeight = 3.7;
   r = 0.1;       // radius of the corners
   wids = 1.05/2;  // half width of the stems
-  lens = 2.9/2;  // half length of the stems
+  lens = 3.0/2;  // half length of the stems
   taper = 0.05;  // percentage difference between top and bottom of stem widths
   module Stem() {
     difference(){
@@ -309,8 +309,8 @@ module choc_stem(draftAng = 5) {
       }
 
       // cuts
-      translate([3.9, 0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7, 3.5, center = true, $fn = 64);
-      translate([-3.9, 0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7, 3.5, center = true, $fn = 64);
+      translate([3.9, 0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7, stemHeight+0.5, center = true, $fn = 64);
+      translate([-3.9, 0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7, stemHeight+0.5, center = true, $fn = 64);
     }
   }
 
