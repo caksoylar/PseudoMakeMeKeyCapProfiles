@@ -15,8 +15,9 @@ keycap(
   StemRot = 0,           // change stem orientation by deg
   Dish    = true,        // turn on dish cut
   homeDot = false,       // turn on homedots
-  thumb = false,         // turn on for thumb keys (keyID = 2 -> 4)
-  convex = false         // turn on for convex keys (keyID = 5 -> 6)
+  thumb = false,         // turn on for thumb keys (keyID = 2 -> 5)
+  symmetric = false,     // turn on to make symmetric thumb dish (keyID = 3)
+  convex = false         // turn on for convex keys (keyID = 6 -> 7)
 );
 */
 
@@ -47,14 +48,15 @@ keyParameters =
   [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,      2], // Chicago Steno R2/R4
   [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,      2], // Chicago Steno R3 flat
 
-  // Thumb:        keyID = 2 -> 4
+  // Thumb:        keyID = 2 -> 5
   [17.20,  16.00,  4.25,  3.25,  5.0,  -.5,  0.0,    -3,    -3,    -0,   2,   2,    .10,      2,     .10,      2,     2,      2], // Thumb 1
+  [17.20,  16.00,  4.25,  3.25,  5.0,   -0,  0.0,    -3,    -0,    -0,   2,   2,    .10,      2,     .10,      2,     2,      2], // Thumb 1 symmetric
   [15.65,   26.4,   5.5,  3.25,  4.9,  -.5,  0.0,    -3,    -2,    -2,   2,   2,     .3,      2,      .3,    2.5,     2,      2], // Thumb 1.5
   [15.65,   35.8,  4.25,  3.25,  4.9, -.25,  0.0,  -2.5,    -4,    -2,   2,   3,     .3,      2,      .3,    2.5,     2,      2], // Thumb 2.0
 
-  // Convex:       keyID = 5 -> 6
-  [17.20,  16.00,   5.6, 	   5,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .10,      3,     .10,      3,     2,       2], // Chicago Steno R3x 1u
-  [35.85,  15.65,     7, 	   7,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .30,      5,     .30,      5,     2,       2], // Chicago Steno R3x 2u
+  // Convex:       keyID = 6 -> 7
+  [17.20,  16.00,   5.6,     5,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .10,      3,     .10,      3,     2,      2], // Chicago Steno R3x 1u
+  [35.85,  15.65,     7,     7,  4.4,    0,   .0,     0,    -0,    -0,   2,   2,    .30,      5,     .30,      5,     2,      2], // Chicago Steno R3x 2u
 ];
 
 dishParameters = // dishParameter[keyID][ParameterID]
@@ -67,6 +69,7 @@ dishParameters = // dishParameter[keyID][ParameterID]
 // FFwd1, FFwd2, FPit1, FPit2, DshDep, DshHDif, FArcIn, FArcFn, FArcEx, BFwd1, BFwd2, BPit1, BPit2, BArcIn, BArcFn, BArcEx, FTani, FTanf, BTani, BTanf, TanEX, PhiInit, PhiFin
   // Thumb
   [    5,   5.5,     0,   -40,      7,     1.7,     16,     18,      2,   5.5,   3.5,     5,   -50,     16,     18,      2,     5,  3.75,     2,  3.75,     2,     199,    210], // T1
+  [    5,   5.5,     0,   -40,      7,     1.7,     16,     18,      2,   5.5,   3.5,     5,   -50,     16,     18,      2,     5,  3.75,     2,  3.75,     2,     199,    210], // T1 sym
   [   10,   4.5,     0,   -40,      7,     1.7,     16,     15,      2,    10,   3.5,     5,   -50,     16,     18,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 1.5u
   [ 14.5,   4.5,     4,   -40,      7,     1.7,     16,     18,      2,  14.5,   4.5,     2,   -35,     16,     23,      2,     3,  3.75,   .75,  3.75,     2,     200,    210], // 2.0u
 
@@ -148,7 +151,7 @@ function DishShape(a, b, phi = 270, theta = 0, r) =
       +r*sin(sig)]
     ],
 
-	theta > 0 ? [[a, b*sin(phi)-r*sin(theta)*2]] : [] // boundary vertex to clear ends
+    theta > 0 ? [[a, b*sin(phi)-r*sin(theta)*2]] : [] // boundary vertex to clear ends
   );
 
 function DishShapeConvex(a, b, c) =
@@ -227,7 +230,7 @@ function FTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*ForwardTanIni
 function BTanRadius(t, keyID) = pow(t/stepsize, TanArcExpo(keyID))*BackTanInit(keyID)    + (1-pow(t/stepsize, TanArcExpo(keyID)))*BackTanFin(keyID);
 
 // /----- KEY Builder Module
-module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, convex = false, StemRot = 0, homeDot = false) {
+module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, symmetric = false, convex = false, StemRot = 0, homeDot = false) {
 
   // Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
@@ -269,6 +272,10 @@ module keycap(keyID = 0, Dish = true, Stem = true, thumb = false, convex = false
     if(Dish){
       translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
       translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), (convex ? 270 : 90)-ZAngleSkew(keyID)])skin(BackCurve);
+      if(symmetric) {
+        mirror([1, 0, 0])translate([-TopWidShift(keyID), .0001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])skin(FrontCurve);
+        mirror([1, 0, 0])translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0, -YAngleSkew(keyID), 0])rotate([0, -90+XAngleSkew(keyID), (convex ? 270 : 90)-ZAngleSkew(keyID)])skin(BackCurve);
+      }
     }
   }
 
@@ -312,11 +319,11 @@ module choc_stem(draftAng = 5) {
 
 // ----- helper functions
 function rounded_rectangle_profile(size=[1, 1], r=1, fn=32) = [
-	for (index = [0:fn-1])
-		let(a = index/fn*360)
-			r * [cos(a), sin(a)]
-			+ sign_x(index, fn) * [size[0]/2-r, 0]
-			+ sign_y(index, fn) * [0, size[1]/2-r]
+    for (index = [0:fn-1])
+        let(a = index/fn*360)
+            r * [cos(a), sin(a)]
+            + sign_x(index, fn) * [size[0]/2-r, 0]
+            + sign_y(index, fn) * [0, size[1]/2-r]
 ];
 
 function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
@@ -346,11 +353,11 @@ function elliptical_rectangle(a = [1, 1], b =[1, 1], fn=32) = [
 ]/2;
 
 function sign_x(i, n) =
-	i < n/4 || i > n-n/4  ?  1 :
-	i > n/4 && i < n-n/4  ? -1 :
-	0;
+    i < n/4 || i > n-n/4  ?  1 :
+    i > n/4 && i < n-n/4  ? -1 :
+    0;
 
 function sign_y(i, n) =
-	i > 0 && i < n/2  ?  1 :
-	i > n/2 ? -1 :
-	0;
+    i > 0 && i < n/2  ?  1 :
+    i > n/2 ? -1 :
+    0;
