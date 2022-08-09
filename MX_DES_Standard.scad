@@ -1,4 +1,4 @@
- use <scad-utils/morphology.scad> //for cheaper minwoski 
+use <scad-utils/morphology.scad> //for cheaper minwoski 
 use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
@@ -19,21 +19,21 @@ mirror([0,0,0])keycap(
   Stab   = 0, 
   visualizeDish = false, // turn on debug visual of Dish 
   crossSection  = false, // center cut to check internal
-  homeDot = false, //turn on homedots
+  homeDot = true, //turn on homedots
   Legends = false
- );
+);
  
 //#translate([0,38,13])cube([18-5.7, 18-5.7,1],center = true);
 //Parameters
-wallthickness = 2.0; // 1.5 for norm, 1.25 for cast master
-topthickness  = 2.5;   // 3 for norm, 2.5 for cast master
+wallthickness = 1.5; // 1.5 for norm, 1.25 for cast master
+topthickness  = 3.0;   // 3 for norm, 2.5 for cast master
 stepsize      = 40;  //resolution of Trajectory
 step          = 6;   //resolution of ellipes 
-fn            = 16;  //resolution of Rounded Rectangles: 60 for output
-layers        = 40;  //resolution of vertical Sweep: 50 for output
-dotRadius     = 0.55;   //home dot size
+fn            = 60;  //resolution of Rounded Rectangles: 60 for output
+layers        = 50;  //resolution of vertical Sweep: 50 for output
+dotRadius     = 0.75;   //home dot size
 //---Stem param
-Tol    = 0.10;
+Tol    = 0.05;
 stemRot = 0;
 stemWid = 7.55;
 stemLen = 5.55 ;
@@ -332,9 +332,7 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
           skin(StemCurve);
           skin(StemCurve2);
         }
-//        translate([0,0,-.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i,keyID))*rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID),fn=fn,r=StemRadius(i, keyID)))]); //Transition Support for taller profile
       }
-    //cut for fonts and extra pattern for light?
     }
     
     //Cuts
@@ -347,34 +345,23 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
       }
    //Dish Shape 
     if(Dish == true){
-     if(visualizeDish == false){
-      translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } else {
-      #translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } 
-   }
-     if(crossSection == true) {
-       translate([0,-15,-.1])cube([15,30,20]); 
-//      translate([-15.1,-15,-.1])cube([15,30,20]); 
-     }
-    if(homeDot == true){
-      // center dot
-      #translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-0.1])sphere(r = dotRadius); // center dot
-      // double bar dots
-//      rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([.75,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.5])sphere(r = dotRadius); // center dot
-//      rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-.75,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.5])sphere(r = dotRadius); // center dot
-      //tri center dots
-//     #rotate([0,YAngleSkew(keyID),ZAngleSkew(keyID)])translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-0.1]){
-//        rotate([0,0,0])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//        rotate([0,0,120])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//        rotate([0,0,240])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//      }
+      if(visualizeDish == false){
+       translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
+       translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
+      } else {
+       #translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
+       #translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
+      } 
+    }
+    if(crossSection == true) {
+     translate([0,-15,-.1])cube([15,30,20]); 
+//    translate([-15.1,-15,-.1])cube([15,30,20]); 
     }
   }
-  //Homing dot
-  
+  if(homeDot == true){
+    rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([1.5,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.])sphere(r = dotRadius); // center dot
+    rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-1.5,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.])sphere(r = dotRadius); // center dot
+  }
 }
 //------------------stems 
 
