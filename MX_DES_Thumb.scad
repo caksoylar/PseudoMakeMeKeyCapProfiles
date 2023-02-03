@@ -10,8 +10,14 @@ use <skin.scad>
 Version 2: Eliptical Rectangle
 
 */
-mirror([0,0,0])keycap(
-  keyID  = 3, //change profile refer to KeyParameters Struct
+union() {
+    translate([9, -1, 0])cube([4, 2, 2]);
+    translate([30, -1, 0])cube([4, 2, 2]);
+    translate([51, -1, 0])cube([4, 2, 2]);
+    //translate([72, -1, 0])cube([4, 2, 2]);
+
+mirror([1,0,0])keycap(
+  keyID  = 1, //change profile refer to KeyParameters Struct
   cutLen = 0, //Don't change. for chopped caps
   Stem   = true, //tusn on shell and stems
   Dish   = true, //turn on dish cut
@@ -21,7 +27,40 @@ mirror([0,0,0])keycap(
   homeDot = false, //turn on homedots
   Legends = false
  );
- 
+ translate([21, 0, 0])mirror([1,0,0])keycap(
+  keyID  = 1, //change profile refer to KeyParameters Struct
+  cutLen = 0, //Don't change. for chopped caps
+  Stem   = true, //tusn on shell and stems
+  Dish   = true, //turn on dish cut
+  Stab   = 0, 
+  visualizeDish = false, // turn on debug visual of Dish 
+  crossSection  = false, // center cut to check internal
+  homeDot = false, //turn on homedots
+  Legends = false
+ );
+ translate([42, 0, 0])keycap(
+  keyID  = 1, //change profile refer to KeyParameters Struct
+  cutLen = 0, //Don't change. for chopped caps
+  Stem   = true, //tusn on shell and stems
+  Dish   = true, //turn on dish cut
+  Stab   = 0, 
+  visualizeDish = false, // turn on debug visual of Dish 
+  crossSection  = false, // center cut to check internal
+  homeDot = false, //turn on homedots
+  Legends = false
+ );
+ translate([63, 0, 0])keycap(
+  keyID  = 1, //change profile refer to KeyParameters Struct
+  cutLen = 0, //Don't change. for chopped caps
+  Stem   = true, //tusn on shell and stems
+  Dish   = true, //turn on dish cut
+  Stab   = 0, 
+  visualizeDish = false, // turn on debug visual of Dish 
+  crossSection  = false, // center cut to check internal
+  homeDot = false, //turn on homedots
+  Legends = false
+ );
+ };
 /*corne thumb hi pro*/
 //color("royalblue")translate([-0,33,0]){
 //  translate([-15, -4, 0])rotate([0,0,30])mirror([1,0,0])keycap(keyID = 0, cutLen = 0, Stem =false,  Dish = true, visualizeDish = false, crossSection = false);
@@ -50,15 +89,15 @@ mirror([0,0,0])keycap(
 //#translate([0,38,13])cube([18-5.7, 18-5.7,1],center = true);
 //echo(len(keyParameters));
 //Parameters
-wallthickness = 2; // 1.5 for norm, 1.25 for cast master
-topthickness  = 2.5;   // 3 for norm, 2.5 for cast master
+wallthickness = 1.5; // 1.5 for norm, 1.25 for cast master
+topthickness  = 3.0;   // 3 for norm, 2.5 for cast master
 stepsize      = 50;  //resolution of Trajectory
 step          = 6;   //resolution of ellipes 
-fn            = 16;  //resolution of Rounded Rectangles: 60 for output
-layers        = 40;  //resolution of vertical Sweep: 50 for output
+fn            = 60;  //resolution of Rounded Rectangles: 60 for output
+layers        = 50;  //resolution of vertical Sweep: 50 for output
 dotRadius     = 1.25;   //home dot size
 //---Stem param
-Tol    = 0.10;
+Tol    = 0.0;
 stemRot = 0;
 stemWid = 7.2;
 stemLen = 5.5;

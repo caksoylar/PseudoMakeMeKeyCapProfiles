@@ -25,7 +25,7 @@ mirror([0,0,0])keycap(
  
 //#translate([0,38,13])cube([18-5.7, 18-5.7,1],center = true);
 //Parameters
-wallthickness = 1.5; // 1.5 for norm, 1.25 for cast master
+wallthickness = 1.25; // 1.5 for norm, 1.25 for cast master
 topthickness  = 3.0;   // 3 for norm, 2.5 for cast master
 stepsize      = 40;  //resolution of Trajectory
 step          = 6;   //resolution of ellipes 
@@ -33,7 +33,7 @@ fn            = 60;  //resolution of Rounded Rectangles: 60 for output
 layers        = 50;  //resolution of vertical Sweep: 50 for output
 dotRadius     = 0.75;   //home dot size
 //---Stem param
-Tol    = 0.05;
+Tol    = 0.00;
 stemRot = 0;
 stemWid = 7.55;
 stemLen = 5.55 ;
@@ -365,11 +365,11 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
 }
 //------------------stems 
 
-MXWid = 4.03/2+Tol; //horizontal lenght
-MXLen = 4.23/2+Tol; //vertical length
+MXWid = 4.23/2+Tol; //horizontal length
+MXLen = 4.03/2+Tol; //vertical length
 
-MXWidT = 1.15/2+Tol; //horizontal thickness
-MXLenT = 1.25/2+Tol; //vertical thickness
+MXWidT = 1.25/2+Tol; //horizontal thickness
+MXLenT = 1.10/2+Tol; //vertical thickness
 
 function stem_internal(sc=1) = sc*[
 [MXLenT, MXLen],[MXLenT, MXWidT],[MXWid, MXWidT],
