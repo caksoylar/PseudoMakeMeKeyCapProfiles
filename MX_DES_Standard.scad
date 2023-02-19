@@ -31,7 +31,7 @@ stepsize      = 50;  //resolution of Trajectory
 step          = 6;   //resolution of ellipes
 fn            = 60;  //resolution of Rounded Rectangles: 60 for output
 layers        = 50;  //resolution of vertical Sweep: 50 for output
-dotRadius     = 0.75;   //home dot size
+dotRadius     = 0.85;   //home dot size
 //---Stem param
 Tol    = 0.00;
 stemRot = 0;
