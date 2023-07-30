@@ -12,7 +12,7 @@ Version 2: Eliptical Rectangle
 */
 
 mirror([1,0,0])keycap(
-  keyID  = 6, //change profile refer to KeyParameters Struct
+  keyID  = 24, //change profile refer to KeyParameters Struct
   cutLen = 0, //Don't change. for chopped caps
   Stem   = true, //tusn on shell and stems
   Dish   = true, //turn on dish cut
@@ -22,6 +22,7 @@ mirror([1,0,0])keycap(
   homeDot = false, //turn on homedots
   Legends = false
  );
+
 /*corne thumb hi pro*/
 //color("royalblue")translate([-0,33,0]){
 //  translate([-15, -4, 0])rotate([0,0,30])mirror([1,0,0])keycap(keyID = 0, cutLen = 0, Stem =false,  Dish = true, visualizeDish = false, crossSection = false);
@@ -100,6 +101,8 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     [17.16,  17.16,   6.5, 	 6.5,    7,    0,   .5,  .001,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 Home
     [17.16,  17.16,   6.5, 	 6.5, 7.25,    0, -.25,    -5,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R2
     [17.16,  17.16,   6.5, 	 6.5,    7,    0,   .5,  .001,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 deepdish
+//rommana
+    [17.16,  17.16,   4.5, 	 6.5,    7,    0,   .5,  .001,     8,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 Home
 ];
 
 dishParameters = //dishParameter[keyID][ParameterID]
@@ -134,7 +137,9 @@ dishParameters = //dishParameter[keyID][ParameterID]
   [   6,    3,   18,  -50,      5,    1.8,   8.8,    15,     2,        5,  4.4,    5,  -55,    8.8,    15,     2], //R4
   [   5,  3.8,    8,  -55,      5,    1.8,   8.5,    15,     2,        5,  4.2,    8,  -55,    8.5,    15,     2], //R3
   [   6,    3,   10,  -50,      5,    1.8,   8.8,    15,     2,        6,    4,   13,   30,    8.8,    16,     2], //R2
-  [5.25,  3.,   16,  -55,      5,    1.8,   8.5,    15,     2,       5.25,  3.1,   16,  -55,    8.5,    15,     2], //R3 deep
+  [5.25,   3.,   16,  -55,      5,    1.8,   8.5,    15,     2,     5.25,  3.1,   16,  -55,    8.5,    15,     2], //R3 deep
+  //rommana
+  [   5,  3.8,    8,  -55,      5,    1.8,  10.5,    15,     2,        5,  4.2,    8,  -55,   10.5,    15,     2], //R3
 ];
 
 function FrontForward1(keyID) = dishParameters[keyID][0];  //
