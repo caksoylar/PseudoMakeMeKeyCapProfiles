@@ -12,7 +12,7 @@ Version 2: Eliptical Rectangle
 */
 
 mirror([1,0,0])keycap(
-  keyID  = 24, //change profile refer to KeyParameters Struct
+  keyID  = 25, //change profile refer to KeyParameters Struct
   cutLen = 0, //Don't change. for chopped caps
   Stem   = true, //tusn on shell and stems
   Dish   = true, //turn on dish cut
@@ -103,6 +103,8 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     [17.16,  17.16,   6.5, 	 6.5,    7,    0,   .5,  .001,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 deepdish
 //rommana
     [17.16,  17.16,   4.5, 	 6.5,    7,    0,   .5,  .001,     8,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 Home
+// 1.5u new
+    [26.66,  17.16,   4.5, 	 6.5,    7,    0,   .5,  .001,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 Home
 ];
 
 dishParameters = //dishParameter[keyID][ParameterID]
@@ -140,6 +142,8 @@ dishParameters = //dishParameter[keyID][ParameterID]
   [5.25,   3.,   16,  -55,      5,    1.8,   8.5,    15,     2,     5.25,  3.1,   16,  -55,    8.5,    15,     2], //R3 deep
   //rommana
   [   5,  3.8,    8,  -55,      5,    1.8,  10.5,    15,     2,        5,  4.2,    8,  -55,   10.5,    15,     2], //R3
+// 1.5u new
+  [   5, 3.8,    12,  -65,      2,    1.8,  12.5,    15,     2,       8,  4.2,    8,  -55,   12.5,    20,     2], //R3
 ];
 
 function FrontForward1(keyID) = dishParameters[keyID][0];  //
