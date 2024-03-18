@@ -6,13 +6,13 @@ is_undef(x[index_]) && vec_is_undef(x,index_+1);
 
 //function is_undef(x) = len(x) > 0 ? vec_is_undef(x) : x == undef;
 // Either a or b, but not both
-function either(a,b,default=undef) = is_undef(a) ? (is_undef(b) ? default : b) : is_undef(b) ? a : undef;
+function either(a,b,default=undef) = is_undef(a) ? (is_undef(b) ? default : -b) : is_undef(b) ? a : undef;
 
 function translationv(left=undef,right=undef,up=undef,down=undef,forward=undef,backward=undef,translation=undef) = 
 translationv_2(
-	x = either(up,-down),
-	y = either(right,-left),
-	z = either(forward,-backward),
+	x = either(up,down),
+	y = either(right,left),
+	z = either(forward,backward),
 	translation = translation);
 
 function translationv_2(x,y,z,translation) =
@@ -26,9 +26,9 @@ function rotationv(pitch=undef,yaw=undef,roll=undef,rotation=undef) =
 	undef;
 
 function trajectory(
-	left=undef,    right=undef,
-	up=undef,      down=undef,
-	forward=undef, backward=undef,
+	left,    right,
+	up,      down,
+	forward, backward,
 	translation=undef,
 
     pitch=undef,
